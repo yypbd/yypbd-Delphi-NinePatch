@@ -24,9 +24,10 @@ type
 
     function LoadFromPNGFile( const AFileName: string ): Boolean;
     function DrawTo( ABitmap: TBitmap32 ): Boolean;
+    function DrawTo2( ABitmap: TBitmap32 ): Boolean;
     function GetContentRect( AWidth, AHeight: Integer ): TRect;
 
-    function ToString: string;
+    function ToString: string; override;
     
     property LeftStart: Integer read FLeftStart;
     property LeftEnd: Integer read FLeftEnd;
@@ -164,8 +165,14 @@ begin
   TopStartDest := TopStart - 1;
   TopEndDest := ABitmap.Width - (FBitmap.Width - 2 - (TopEnd));
 
+  {
+  1 2 3
+  4 5 6
+  7 8 9
+  }
+
+  // using BitBlt
   // 1
-  // ABitmap.Draw( Rect(0, 0, TopStartDest, LeftStartDest), Rect(1, 1, TopStart, LeftStart), FBitmap );
   BitBlt( ABitmap.Canvas.Handle, 0, 0, TopStartDest, LeftStartDest,
     FBitmap.Canvas.Handle, 1, 1,
     SRCCOPY );
@@ -229,6 +236,91 @@ begin
   BitBlt( ABitmap.Canvas.Handle, TopEndDest, LeftEndDest, ABitmap.Width - TopEndDest, ABitmap.Height - LeftEndDest,
     FBitmap.Canvas.Handle, TopEnd, LeftEnd,
     SRCCOPY );
+
+  Result := True;
+end;
+
+function TNinePatch.DrawTo2(ABitmap: TBitmap32): Boolean;
+var
+  LeftStartDest, LeftEndDest: Integer;
+  TopStartDest, TopEndDest: Integer;
+begin
+  LeftStartDest := LeftStart - 1;
+  LeftEndDest := ABitmap.Height - (FBitmap.Height - 2 - (LeftEnd));
+
+  TopStartDest := TopStart - 1;
+  TopEndDest := ABitmap.Width - (FBitmap.Width - 2 - (TopEnd));
+
+  {
+  1 2 3
+  4 5 6
+  7 8 9
+  }
+
+  // using TBitmap32.Draw
+
+  // 1
+  ABitmap.Draw(
+    Rect(0, 0, TopStartDest, LeftStartDest),
+    Rect(1, 1, TopStart, LeftStart),
+    FBitmap );
+
+  // 2
+  ABitmap.Draw(
+    Rect(TopStartDest, 0, TopEndDest, LeftStartDest),
+    Rect(TopStart, 1, TopEnd, LeftStart),
+    FBitmap );
+
+  // 3
+  ABitmap.Draw(
+    Rect(TopEndDest, 0, ABitmap.Width, LeftStartDest),
+    Rect(TopEnd, 1, FBitmap.Width - 1, LeftStart),
+    FBitmap
+  );
+
+  // 4
+  ABitmap.Draw(
+    Rect(0, LeftStartDest, TopStartDest, LeftEndDest),
+    Rect(1, LeftStart, TopStart, LeftEnd),
+    FBitmap
+  );
+
+  // 5
+  ABitmap.Draw(
+    Rect(TopStartDest, LeftStartDest, TopEndDest, LeftEndDest),
+    Rect(TopStart, LeftStart, TopEnd, LeftEnd),
+    FBitmap
+  );
+
+  // 6
+  ABitmap.Draw(
+    Rect(TopEndDest, LeftStartDest, ABitmap.Width, LeftEndDest),
+    Rect(TopEnd, LeftStart, FBitmap.Width - 1, LeftEnd),
+    FBitmap
+  );
+
+  // 7
+  ABitmap.Draw(
+    Rect( 0, LeftEndDest, TopStartDest, ABitmap.Height ),
+    Rect( 1, LeftEnd, TopStart, FBitmap.Height - 1 ),
+    FBitmap
+  );
+
+  // 8
+  ABitmap.Draw(
+    Rect(TopStartDest, LeftEndDest, TopEndDest, ABitmap.Height),
+    Rect(TopStart, LeftEnd, TopEnd, FBitmap.Height - 1),
+    FBitmap
+  );
+
+  // 9
+  ABitmap.Draw(
+    Rect(TopEndDest, LeftEndDest, ABitmap.Width, ABitmap.Height),
+    Rect(TopEnd, LeftEnd, FBitmap.Width - 1, FBitmap.Height - 1),
+    FBitmap
+  );
+
+  Result := True;
 end;
 
 function TNinePatch.GetContentRect(AWidth, AHeight: Integer): TRect;

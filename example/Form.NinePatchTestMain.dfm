@@ -50,6 +50,15 @@ object FormNinePatchTestMain: TFormNinePatchTestMain
     Caption = 'ShowContentArea'
     TabOrder = 3
   end
+  object Button1: TButton
+    Left = 528
+    Top = 17
+    Width = 75
+    Height = 25
+    Caption = 'Button1'
+    TabOrder = 4
+    OnClick = Button1Click
+  end
   object OpenDialogPNG: TOpenDialog
     DefaultExt = '.png'
     Filter = 'PNG Image|*.png'

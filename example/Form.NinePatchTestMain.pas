@@ -19,8 +19,10 @@ type
     ButtonDraw: TButton;
     OpenDialogPNG: TOpenDialog;
     CheckBoxShowContentArea: TCheckBox;
+    Button1: TButton;
     procedure ButtonDrawClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -44,7 +46,49 @@ begin
   Result := Format( 'Left: %d, Top: %d, Right: %d, Bottom: %d', [Left, Top, Right, Bottom] );
 end;
 
-{ TForm1 }
+{ TFormNinePatchTestMain }
+
+procedure TFormNinePatchTestMain.Button1Click(Sender: TObject);
+var
+  FileName: string;
+  NinePatch: TNinePatch;
+  I: Integer;
+  Bitmap: TBitmap32;
+  Tick: DWORD;
+begin
+  if OpenDialogPNG.Execute then
+  begin
+    FileName := OpenDialogPNG.FileName;
+
+    NinePatch := TNinePatch.Create;
+    Bitmap := TBitmap32.Create;
+    try
+      MemoLog.Lines.Clear;
+
+      if NinePatch.LoadFromPNGFile( FileName ) then
+      begin
+        Bitmap.SetSize( 500, 500 );
+
+        Tick := GetTickCount;
+        for I := 1 to 5000 do
+        begin
+          NinePatch.DrawTo( Bitmap );
+        end;
+        MemoLog.Lines.Add( Format( 'Using BitBlt - elapses tick : %d', [GetTickCount- Tick] ) );
+
+        Tick := GetTickCount;
+        for I := 1 to 5000 do
+        begin
+          NinePatch.DrawTo2( Bitmap );
+        end;
+        MemoLog.Lines.Add( Format( 'Using TBitmap32.Draw - elapses tick : %d', [GetTickCount- Tick] ) );
+      end;
+    finally
+      NinePatch.free;
+      Bitmap.Free;
+    end;
+  end;
+end;
 
 procedure TFormNinePatchTestMain.ButtonDrawClick(Sender: TObject);
 var
@@ -56,7 +100,7 @@ var
   procedure DrawNinePatchImage( AWidth, AHeight, AX, AY: Integer );
   begin
     Bitmap.SetSize( AWidth, AHeight );
-    NinePatch.DrawTo( Bitmap );
+    NinePatch.DrawTo2( Bitmap );
 
     ContentRect := NinePatch.GetContentRect( Bitmap.Width, Bitmap.Height );
     MemoLog.Lines.Add( Format( '[Content Area Info Width: %d Height: %d]', [AWidth, AHeight]) );
