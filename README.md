@@ -1,9 +1,9 @@
 # Delphi-NinePatch
-Nine-patch image library for Delphi
+Nine-patch image library for Delphi.
 
 # Description
 
-This library support Android Nine-patch png image
+This library supports Android Nine-patch png images.
 
 # Needed Library
 
