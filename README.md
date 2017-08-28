@@ -1,10 +1,14 @@
 # Delphi-NinePatch
 Nine-patch image library for Delphi.
 
-# Description
+This library supports Nine-patch png for Android in Delphi.
 
-This library supports Android Nine-patch png images.
+
+# Usage
+
+See example folder. :)
+
 
 # Needed Library
 
-Graphics32
+1. [Graphics32](https://github.com/graphics32/graphics32)
