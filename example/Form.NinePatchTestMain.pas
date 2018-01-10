@@ -79,7 +79,7 @@ begin
         Tick := GetTickCount;
         for I := 1 to 5000 do
         begin
-          NinePatch.DrawTo2( Bitmap );
+          NinePatch.DrawTo( Bitmap );
         end;
         MemoLog.Lines.Add( Format( 'Using TBitmap32.Draw - elapses tick : %d', [GetTickCount- Tick] ) );
       end;
@@ -100,7 +100,7 @@ var
   procedure DrawNinePatchImage( AWidth, AHeight, AX, AY: Integer );
   begin
     Bitmap.SetSize( AWidth, AHeight );
-    NinePatch.DrawTo2( Bitmap );
+    NinePatch.DrawTo( Bitmap );
 
     ContentRect := NinePatch.GetContentRect( Bitmap.Width, Bitmap.Height );
     MemoLog.Lines.Add( Format( '[Content Area Info Width: %d Height: %d]', [AWidth, AHeight]) );
@@ -127,7 +127,7 @@ begin
           // Clear Board
           Image32Board.Bitmap.Width := Image32Board.Width;
           Image32Board.Bitmap.Height := Image32Board.Height;
-          Image32Board.Bitmap.FillRect(0, 0, Image32Board.Bitmap.Width, Image32Board.Bitmap.Height, clRed32);
+          Image32Board.Bitmap.FillRect(0, 0, Image32Board.Bitmap.Width, Image32Board.Bitmap.Height, clYellow32);
 
           MemoLog.Lines.Add( '[Nine-patch Info]' );
           MemoLog.Lines.Add( NinePatch.ToString );
