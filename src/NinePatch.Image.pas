@@ -8,6 +8,10 @@ uses
 // https://developer.android.com/guide/topics/graphics/2d-graphics.html#nine-patch
 
 type
+  TRectHelper = record helper for TRect
+    procedure ToLog;
+  end;
+
   TNinePatch = class
   private
     FBitmap: TBitmap32;
@@ -159,10 +163,10 @@ var
   TopStartDest, TopEndDest: Integer;
 begin
   LeftStartDest := LeftStart - 1;
-  LeftEndDest := ABitmap.Height - (FBitmap.Height - 2 - (LeftEnd));
+  LeftEndDest := ABitmap.Height - (FBitmap.Height - 2 - (LeftEnd)) - 1;
 
   TopStartDest := TopStart - 1;
-  TopEndDest := ABitmap.Width - (FBitmap.Width - 2 - (TopEnd));
+  TopEndDest := ABitmap.Width - (FBitmap.Width - 2 - (TopEnd)) - 1;
 
   {
   1 2 3
@@ -187,9 +191,10 @@ begin
   // 3
   ABitmap.Draw(
     Rect(TopEndDest, 0, ABitmap.Width, LeftStartDest),
-    Rect(TopEnd, 1, FBitmap.Width, LeftStart),
+    Rect(TopEnd, 1, FBitmap.Width - 1, LeftStart),
     FBitmap
   );
+
 
   // 4
   ABitmap.Draw(
@@ -208,28 +213,29 @@ begin
   // 6
   ABitmap.Draw(
     Rect(TopEndDest, LeftStartDest, ABitmap.Width, LeftEndDest),
-    Rect(TopEnd, LeftStart, FBitmap.Width, LeftEnd),
+    Rect(TopEnd, LeftStart, FBitmap.Width - 1, LeftEnd),
     FBitmap
   );
+
 
   // 7
   ABitmap.Draw(
     Rect( 0, LeftEndDest, TopStartDest, ABitmap.Height ),
-    Rect( 1, LeftEnd, TopStart, FBitmap.Height ),
+    Rect( 1, LeftEnd, TopStart, FBitmap.Height - 1 ),
     FBitmap
   );
 
   // 8
   ABitmap.Draw(
     Rect(TopStartDest, LeftEndDest, TopEndDest, ABitmap.Height),
-    Rect(TopStart, LeftEnd, TopEnd, FBitmap.Height),
+    Rect(TopStart, LeftEnd, TopEnd, FBitmap.Height - 1),
     FBitmap
   );
 
   // 9
   ABitmap.Draw(
     Rect(TopEndDest, LeftEndDest, ABitmap.Width, ABitmap.Height),
-    Rect(TopEnd, LeftEnd, FBitmap.Width, FBitmap.Height),
+    Rect(TopEnd, LeftEnd, FBitmap.Width - 1, FBitmap.Height - 1),
     FBitmap
   );
 
@@ -262,6 +268,13 @@ function TNinePatch.ToString: string;
 begin
   Result := Format( 'W: %d, H: %d, Left S: %d E: %d, Top S: %d E: %d, Right S: %d E: %d, Bottom S: %d E: %d',
     [FBitmap.Width, FBitmap.Height, LeftStart, LeftEnd, TopStart, TopEnd, RightStart, RightEnd, BottomStart, BottomEnd] );
+end;
+
+{ TRectHelper }
+
+procedure TRectHelper.ToLog;
+begin
+  OutputDebugString( PChar(Format('Left: %d,  Top: %d,  Right: %d,  Bottom: %d,  Width: %d,  Height: %d', [Left, Top, Right, Bottom, Width, Height])) );
 end;
 
 end.
