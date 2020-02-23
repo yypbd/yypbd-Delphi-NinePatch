@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, GR32, PngImage, Vcl.StdCtrls,
-  GR32_Image;
+  GR32_Image, Vcl.ExtCtrls;
 
 type
   TRectHelper = record helper for TRect
@@ -20,6 +20,7 @@ type
     OpenDialogPNG: TOpenDialog;
     CheckBoxShowContentArea: TCheckBox;
     Button1: TButton;
+    pnlTopbar: TPanel;
     procedure ButtonDrawClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -139,7 +140,7 @@ begin
           DrawNinePatchImage( 200, 100, 0, 150 );
 
           // Draw Test3
-          DrawNinePatchImage( 100, 200, 250, 150 );
+          DrawNinePatchImage( 300, 400, 250, 10 );
         finally
           Bitmap.Free;
         end;

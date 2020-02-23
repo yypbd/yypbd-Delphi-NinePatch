@@ -7,7 +7,7 @@ uses
 
 type
   TPNGUtil = record
-    class function IsNinePatch( const AFileName: string ): Boolean; static;
+    class function IsNinePatchFileName(const AFileName: string): Boolean; static;
     class function GetAlpha( AColor: TColor32 ): Byte; static;
     class function PNGFileLoadAndAlphaToBitmap32(const AFileName: String; ABitmap32: TBitmap32): Boolean; overload; static;
     class function PNGFileLoadAndAlphaToBitmap32(AStream: TStream; ABitmap32: TBitmap32): Boolean; overload; static;
@@ -29,7 +29,6 @@ begin
   Stream := TMemoryStream.Create;
   try
     Stream.LoadFromFile( AFileName );
-
     Result := PNGFileLoadAndAlphaToBitmap32( Stream, ABitmap32 );
   finally
     Stream.Free;
@@ -44,7 +43,7 @@ begin
   Result := A;
 end;
 
-class function TPNGUtil.IsNinePatch(const AFileName: string): Boolean;
+class function TPNGUtil.IsNinePatchFileName(const AFileName: string): Boolean;
 begin
   Result := LowerCase( Copy( AFileName, Length(AFileName) - 6 + 1, 6 ) ) = '.9.png';
 end;

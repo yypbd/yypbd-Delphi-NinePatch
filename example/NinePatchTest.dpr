@@ -1,7 +1,7 @@
 ﻿program NinePatchTest;
 
 uses
-  EMemLeaks,
+  //EMemLeaks,
   Vcl.Forms,
   Form.NinePatchTestMain in 'Form.NinePatchTestMain.pas' {FormNinePatchTestMain},
   NinePatch.Image in '..\src\NinePatch.Image.pas',

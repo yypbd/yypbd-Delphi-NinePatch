@@ -31,7 +31,8 @@ type
     function GetContentRect( AWidth, AHeight: Integer ): TRect;
 
     function ToString: string; override;
-    
+    function LoadFromStream(const aStream: TStream): Boolean;
+
     property LeftStart: Integer read FLeftStart;
     property LeftEnd: Integer read FLeftEnd;
     property TopStart: Integer read FTopStart;
@@ -254,8 +255,8 @@ function TNinePatch.LoadFromPNGFile(const AFileName: string): Boolean;
 begin
   Result := False;
 
-  if not TPNGUtil.IsNinePatch( AFileName ) then
-    Exit;
+  //  if not TPNGUtil.IsNinePatchFileName( AFileName ) then
+  //    Exit;
 
   if TPNGUtil.PNGFileLoadAndAlphaToBitmap32( AFileName, FBitmap ) then
   begin
@@ -268,6 +269,15 @@ function TNinePatch.ToString: string;
 begin
   Result := Format( 'W: %d, H: %d, Left S: %d E: %d, Top S: %d E: %d, Right S: %d E: %d, Bottom S: %d E: %d',
     [FBitmap.Width, FBitmap.Height, LeftStart, LeftEnd, TopStart, TopEnd, RightStart, RightEnd, BottomStart, BottomEnd] );
+end;
+
+function TNinePatch.LoadFromStream(const aStream: TStream): Boolean;
+begin
+  if TPNGUtil.PNGFileLoadAndAlphaToBitmap32( aStream, FBitmap ) then
+  begin
+    AnalyseNinePatchPoint;
+    Result := True;
+  end;
 end;
 
 { TRectHelper }

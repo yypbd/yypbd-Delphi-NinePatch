@@ -2,67 +2,104 @@ object FormNinePatchTestMain: TFormNinePatchTestMain
   Left = 0
   Top = 0
   Caption = 'FormNinePatchTestMain'
-  ClientHeight = 642
-  ClientWidth = 724
+  ClientHeight = 743
+  ClientWidth = 1002
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
+  Font.Height = -15
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
-  PixelsPerInch = 96
-  TextHeight = 13
-  object MemoLog: TMemo
-    Left = 20
-    Top = 60
-    Width = 445
-    Height = 109
-    TabOrder = 0
-  end
+  PixelsPerInch = 130
+  TextHeight = 18
   object Image32Board: TImage32
-    Left = 20
-    Top = 184
-    Width = 677
-    Height = 401
+    Left = 0
+    Top = 200
+    Width = 1002
+    Height = 543
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
+    Align = alClient
     Bitmap.ResamplerClassName = 'TNearestResampler'
     BitmapAlign = baTopLeft
     Scale = 1.000000000000000000
     ScaleMode = smNormal
+    TabOrder = 0
+  end
+  object pnlTopbar: TPanel
+    Left = 0
+    Top = 0
+    Width = 1002
+    Height = 49
+    Align = alTop
     TabOrder = 1
+    object Button1: TButton
+      AlignWithMargins = True
+      Left = 480
+      Top = 5
+      Width = 104
+      Height = 39
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alLeft
+      Caption = 'Button1'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+    object ButtonDraw: TButton
+      AlignWithMargins = True
+      Left = 5
+      Top = 5
+      Width = 237
+      Height = 39
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alLeft
+      Caption = 'Draw Nine-patch Png From File'
+      TabOrder = 1
+      OnClick = ButtonDrawClick
+    end
+    object CheckBoxShowContentArea: TCheckBox
+      AlignWithMargins = True
+      Left = 250
+      Top = 5
+      Width = 222
+      Height = 39
+      Margins.Left = 4
+      Margins.Top = 4
+      Margins.Right = 4
+      Margins.Bottom = 4
+      Align = alLeft
+      Caption = 'ShowContentArea'
+      TabOrder = 2
+    end
   end
-  object ButtonDraw: TButton
-    Left = 20
-    Top = 13
-    Width = 133
-    Height = 25
-    Caption = 'Draw Nine-patch Png'
+  object MemoLog: TMemo
+    Left = 0
+    Top = 49
+    Width = 1002
+    Height = 151
+    Margins.Left = 4
+    Margins.Top = 4
+    Margins.Right = 4
+    Margins.Bottom = 4
+    Align = alTop
+    ScrollBars = ssVertical
     TabOrder = 2
-    OnClick = ButtonDrawClick
-  end
-  object CheckBoxShowContentArea: TCheckBox
-    Left = 212
-    Top = 17
-    Width = 161
-    Height = 17
-    Caption = 'ShowContentArea'
-    TabOrder = 3
-  end
-  object Button1: TButton
-    Left = 528
-    Top = 17
-    Width = 75
-    Height = 25
-    Caption = 'Button1'
-    TabOrder = 4
-    OnClick = Button1Click
   end
   object OpenDialogPNG: TOpenDialog
     DefaultExt = '.png'
     Filter = 'PNG Image|*.png'
-    Left = 384
-    Top = 12
+    Left = 696
+    Top = 84
   end
 end
