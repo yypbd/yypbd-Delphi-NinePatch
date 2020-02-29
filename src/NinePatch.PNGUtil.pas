@@ -54,7 +54,6 @@ type
   TRGBByte = record
     B, G, R: byte;
   end;
-
   PRGBArray = ^TRGBArray;
   TRGBArray = array[0..0] of TRGBByte;
 var
@@ -68,24 +67,26 @@ begin
   try
     try
       Png.LoadFromStream( AStream );
-
       ABitmap32.SetSize(Png.Width, Png.Height);
-
       ABitmap32.Clear(SetAlpha(clWhite32, 0));
 
       for Y := 0 to ABitmap32.Height - 1 do
       begin
         AlphaScanLine := Png.AlphaScanline[Y];
         ScanLine := Png.Scanline[Y];
-
-        if not Assigned(ScanLine) then Continue;
+        //        // 2020-02-29: edwin
+        //        Assert(Length(ScanLine^) = ABitmap32.Width,
+        //          'TPNGUtil.PNGFileLoadAndAlphaToBitmap32: Length(ScanLine) <> ABitmap32.Width is WRONG!');
+        if not Assigned(ScanLine) then
+          Continue;
 
         for X := 0 to ABitmap32.Width - 1 do
         begin
           Alpha := 255;
-          if Assigned(AlphaScanLine) then Alpha := AlphaScanLine[X];
-
-          if Alpha <= 0 then Continue;
+          if Assigned(AlphaScanLine) then
+            Alpha := AlphaScanLine[X];
+          if Alpha <= 0 then
+            Continue;
 
           ABitmap32.Pixel[X,Y] := Color32(ScanLine[X].R, ScanLine[X].G, ScanLine[X].B, Alpha);
         end;

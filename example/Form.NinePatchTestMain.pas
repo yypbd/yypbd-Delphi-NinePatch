@@ -95,22 +95,22 @@ procedure TFormNinePatchTestMain.ButtonDrawClick(Sender: TObject);
 var
   FileName: string;
   NinePatch: TNinePatch;
-  Bitmap: TBitmap32;
+  tmpBmp: TBitmap32;
   ContentRect: TRect;
 
   procedure DrawNinePatchImage( AWidth, AHeight, AX, AY: Integer );
   begin
-    Bitmap.SetSize( AWidth, AHeight );
-    NinePatch.DrawTo( Bitmap );
+    tmpBmp.SetSize( AWidth, AHeight );
+    NinePatch.DrawTo( tmpBmp );
 
-    ContentRect := NinePatch.GetContentRect( Bitmap.Width, Bitmap.Height );
+    ContentRect := NinePatch.GetContentRect( tmpBmp.Width, tmpBmp.Height );
     MemoLog.Lines.Add( Format( '[Content Area Info Width: %d Height: %d]', [AWidth, AHeight]) );
     MemoLog.Lines.Add( ContentRect.ToString );
     if CheckBoxShowContentArea.Checked then
-      Bitmap.FillRect( ContentRect.Left, ContentRect.Top, ContentRect.Right, ContentRect.Bottom, clBlack32 );
+      tmpBmp.FillRect( ContentRect.Left, ContentRect.Top, ContentRect.Right, ContentRect.Bottom, clBlack32 );
 
-    Bitmap.DrawMode := dmBlend;
-    Bitmap.DrawTo(Image32Board.Bitmap, AX, AY);
+    tmpBmp.DrawMode := dmBlend;
+    tmpBmp.DrawTo(Image32Board.Bitmap, AX, AY);
   end;
 begin
   if OpenDialogPNG.Execute then
@@ -123,7 +123,7 @@ begin
       begin
         MemoLog.Clear;
 
-        Bitmap := TBitmap32.Create;
+        tmpBmp := TBitmap32.Create;
         try
           // Clear Board
           Image32Board.Bitmap.Width := Image32Board.Width;
@@ -142,7 +142,7 @@ begin
           // Draw Test3
           DrawNinePatchImage( 300, 400, 250, 10 );
         finally
-          Bitmap.Free;
+          tmpBmp.Free;
         end;
       end;
     finally

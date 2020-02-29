@@ -3,7 +3,7 @@
 interface
 
 uses
-  Windows, Classes, SysUtils, GR32;
+  Windows, Classes, SysUtils, GR32, GR32_Resamplers;
 
 // https://developer.android.com/guide/topics/graphics/2d-graphics.html#nine-patch
 
@@ -32,6 +32,8 @@ type
 
     function ToString: string; override;
     function LoadFromStream(const aStream: TStream): Boolean;
+    function GetOriginalWidth: Integer;
+    function GetOriginalHeight: Integer;
 
     property LeftStart: Integer read FLeftStart;
     property LeftEnd: Integer read FLeftEnd;
@@ -41,6 +43,7 @@ type
     property RightEnd: Integer read FRightEnd;
     property BottomStart: Integer read FBottomStart;
     property BottomEnd: Integer read FBottomEnd;
+    property Bitmap: TBitmap32 read FBitmap;
   end;
 
 implementation
@@ -149,6 +152,8 @@ end;
 constructor TNinePatch.Create;
 begin
   FBitmap := TBitmap32.Create;
+  FBitmap.ResamplerClassName := 'TKernelResampler';
+  TKernelResampler(FBitmap.Resampler).KernelClassName := 'TLanczosKernel';
 end;
 
 destructor TNinePatch.Destroy;
@@ -278,6 +283,18 @@ begin
     AnalyseNinePatchPoint;
     Result := True;
   end;
+end;
+
+function TNinePatch.GetOriginalWidth: Integer;
+begin
+  // A nine-patch PNG has a 1-pixel border on each side
+  Result := FBitmap.Width - 2;
+end;
+
+function TNinePatch.GetOriginalHeight: Integer;
+begin
+  // A nine-patch PNG has a 1-pixel border on each side
+  Result := FBitmap.Height - 2;
 end;
 
 { TRectHelper }
