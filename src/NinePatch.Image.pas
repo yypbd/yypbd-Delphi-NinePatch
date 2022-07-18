@@ -3,7 +3,7 @@
 interface
 
 uses
-  Windows, Classes, SysUtils, GR32;
+  Windows, Classes, SysUtils, GR32, GR32_Resamplers;
 
 // https://developer.android.com/guide/topics/graphics/2d-graphics.html#nine-patch
 
@@ -31,7 +31,10 @@ type
     function GetContentRect( AWidth, AHeight: Integer ): TRect;
 
     function ToString: string; override;
-    
+    function LoadFromStream(const aStream: TStream): Boolean;
+    function GetOriginalWidth: Integer;
+    function GetOriginalHeight: Integer;
+
     property LeftStart: Integer read FLeftStart;
     property LeftEnd: Integer read FLeftEnd;
     property TopStart: Integer read FTopStart;
@@ -40,6 +43,7 @@ type
     property RightEnd: Integer read FRightEnd;
     property BottomStart: Integer read FBottomStart;
     property BottomEnd: Integer read FBottomEnd;
+    property Bitmap: TBitmap32 read FBitmap;
   end;
 
 implementation
@@ -148,6 +152,8 @@ end;
 constructor TNinePatch.Create;
 begin
   FBitmap := TBitmap32.Create;
+  FBitmap.ResamplerClassName := 'TKernelResampler';
+  TKernelResampler(FBitmap.Resampler).KernelClassName := 'TLanczosKernel';
 end;
 
 destructor TNinePatch.Destroy;
@@ -254,8 +260,8 @@ function TNinePatch.LoadFromPNGFile(const AFileName: string): Boolean;
 begin
   Result := False;
 
-  if not TPNGUtil.IsNinePatch( AFileName ) then
-    Exit;
+  //  if not TPNGUtil.IsNinePatchFileName( AFileName ) then
+  //    Exit;
 
   if TPNGUtil.PNGFileLoadAndAlphaToBitmap32( AFileName, FBitmap ) then
   begin
@@ -268,6 +274,27 @@ function TNinePatch.ToString: string;
 begin
   Result := Format( 'W: %d, H: %d, Left S: %d E: %d, Top S: %d E: %d, Right S: %d E: %d, Bottom S: %d E: %d',
     [FBitmap.Width, FBitmap.Height, LeftStart, LeftEnd, TopStart, TopEnd, RightStart, RightEnd, BottomStart, BottomEnd] );
+end;
+
+function TNinePatch.LoadFromStream(const aStream: TStream): Boolean;
+begin
+  if TPNGUtil.PNGFileLoadAndAlphaToBitmap32( aStream, FBitmap ) then
+  begin
+    AnalyseNinePatchPoint;
+    Result := True;
+  end;
+end;
+
+function TNinePatch.GetOriginalWidth: Integer;
+begin
+  // A nine-patch PNG has a 1-pixel border on each side
+  Result := FBitmap.Width - 2;
+end;
+
+function TNinePatch.GetOriginalHeight: Integer;
+begin
+  // A nine-patch PNG has a 1-pixel border on each side
+  Result := FBitmap.Height - 2;
 end;
 
 { TRectHelper }
